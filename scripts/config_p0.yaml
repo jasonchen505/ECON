@@ -1,0 +1,173 @@
+
+
+runner: "episode_runner"
+mac: "basic_mac"
+learner: "q_learner"
+
+t_max: 300                 
+test_interval: 100       
+test_nepisode: 100         
+use_replay: true
+replay_capacity: 2000    
+rb_seq_len: 1
+rb_batch_episodes: 8      
+rb_updates_per_step: 4    
+text_embed_dim: 1024
+n_agents: 3
+belief_dim: 128
+batch_size_run: 1
+state_shape: 1024
+
+agent_output_type: "q_values"
+action_selector: "multinomial"
+obs_last_action: false
+obs_agent_id: true
+use_causal_mask: false
+max_seq_length: 1024
+n_actions: 2
+
+
+llm_model_name: "gpt2"
+together_api_key: "${TOGETHER_API_KEY}"
+coordinator_model: "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo"
+executor_model: "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo"
+commitment_embedding_model_name: "BAAI/bge-large-en-v1.5"
+
+
+env: "huggingface_dataset_env"
+env_args:
+  hf_dataset_path: "gsm8k"
+  hf_dataset_config_name: "main"
+  dataset_split: "train"
+  max_question_length: 1024
+  max_answer_length: 2048
+  dataset_streaming: false
+  use_random_sampling: false      
+  random_without_replacement: true
+  loop_dataset: true
+  use_dataset_episode: false
+  max_rounds: 1
+  reward:
+    initial_weights: [0.4, 0.4, 0.2]
+
+
+train:
+  episodes_per_task: 10
+  buffer_size: 16         
+  batch_size: 8             
+  update_interval: 5
+  optimizer: "adam"
+  learning_rate: 0.0008      
+  coordinator_learning_rate: 0.0003  
+  gamma: 0.99
+
+
+target_update_tau: 0.01    
+target_update_interval: 8    
+
+
+lr: 0.0004                   
+belief_net_lr: 0.0004        
+encoder_lr: 0.0004          
+mixer_lr: 0.0004             
+weight_decay: 0.00001        
+episode_length: 1
+
+
+bne_max_iterations: 3
+bne_convergence_threshold: 0.01
+stage2_weight: 0.3
+
+
+arch:
+  entity_dim: 128
+  attention_heads: 4
+  transformer_blocks: 2
+  key_dim: 32
+  mlp_hidden_size: 128
+  feedforward_size: 512
+  dropout_rate: 0.15         
+  layer_norm_epsilon: 0.00001
+
+prompt_attention_heads: 2
+commitment_embedding_dim: 1024
+
+
+sampling:
+  temperature_min: 0.2       
+  temperature_max: 1.5    
+  p_min: 0.2               
+  p_max: 0.85                
+
+
+bne:
+  enabled: true
+  train_refine: true
+
+
+  max_iterations_train: 1
+
+
+  max_iterations_infer: 3
+
+
+  refine_at_infer: true
+
+
+  convergence_threshold: 0.08    
+
+
+  early_stop: true
+
+
+  update_rate: 1.0          
+
+
+reward:
+  max_value: 1.0
+  initial_weights: [0.4, 0.4, 0.2]
+  eta_alpha: 0.001
+  dynamic_alpha_update: true
+  r_expected_source: "q_value"
+  al_weight: 0.35            
+  ts_weight: 0.45         
+  cc_weight: 0.20          
+
+loss:
+  belief_weight: 0.15       
+  encoder_weight: 0.1
+  mixing_weight: 0.1
+
+
+early_stopping:
+  commitment_threshold: 0.05
+  loss_threshold: 0.001
+  reward_threshold: 0.5
+  patience: 5               
+  min_delta: 0.0
+  warmup: 20               
+
+
+system:
+  use_cuda: true
+  device_num: 0
+  seed: 42
+  debug: true
+
+logging:
+  use_tensorboard: true
+  log_interval: 1
+  save_model: true
+  save_model_interval: 50
+  checkpoint_path: "./models_p0_optimized"    
+  log_path: "./logs_p0_optimized"              
+  experiment_name: "bne_p0_optimized_300ep"
+
+
+llm:
+  together_api_key: "${TOGETHER_API_KEY}"
+  coordinator_model: "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo"
+  executor_model: "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo"
+  max_tokens: 2048
+
+use_replay: false

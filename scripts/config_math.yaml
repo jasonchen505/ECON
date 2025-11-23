@@ -1,0 +1,116 @@
+runner: "episode_runner"
+mac: "basic_mac"
+learner: "q_learner"
+
+t_max: 300
+test_interval: 100
+test_nepisode: 100
+
+n_agents: 3
+belief_dim: 128
+n_actions: 2
+max_seq_length: 1024
+batch_size_run: 1
+
+llm_model_name: "gpt2"
+together_api_key: "${TOGETHER_API_KEY}"
+coordinator_model: "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo"
+executor_model: "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo"
+commitment_embedding_model_name: "BAAI/bge-large-en-v1.5"
+
+env: "huggingface_dataset_env"
+env_args:
+  hf_dataset_path: "DigitalLearningGmbH/MATH-lighteval"
+  hf_dataset_config_name: null
+  dataset_split: "train"
+  question_field_name: null
+  answer_field_name: null
+  max_question_length: 1536
+  max_answer_length: 2048
+  dataset_streaming: false
+  use_random_sampling: false
+  random_without_replacement: true
+  loop_dataset: true
+  max_rounds: 1
+  reward:
+    initial_weights: [0.4, 0.4, 0.2]
+    al_weight: 0.35
+    ts_weight: 0.55
+    cc_weight: 0.10
+
+env_args_test:
+  dataset_split: "test"
+
+train:
+  episodes_per_task: 10
+  buffer_size: 16
+  batch_size: 8
+  update_interval: 5
+  optimizer: "adam"
+  learning_rate: 0.0008
+  coordinator_learning_rate: 0.0003
+  gamma: 0.99
+
+sampling:
+  temperature_min: 0.2
+  temperature_max: 1.5
+  p_min: 0.2
+  p_max: 0.85
+
+bne:
+  enabled: true
+  train_refine: true
+  max_iterations_train: 1
+  max_iterations_infer: 1
+  refine_at_infer: true
+  convergence_threshold: 0.08
+  update_rate: 1.0
+  commitment_match_threshold: 0.993
+  commitment_osc_threshold: 0.97
+  detect_oscillation: true
+
+reward:
+  initial_weights: [0.4, 0.4, 0.2]
+  eta_alpha: 0.001
+  dynamic_alpha_update: true
+  r_expected_source: "q_value"
+
+arch:
+  entity_dim: 128
+  attention_heads: 4
+  transformer_blocks: 2
+  key_dim: 32
+  mlp_hidden_size: 128
+  feedforward_size: 512
+  dropout_rate: 0.15
+  layer_norm_epsilon: 0.00001
+
+prompt_attention_heads: 2
+commitment_embedding_dim: 1024
+
+loss:
+  belief_weight: 0.15
+  encoder_weight: 0.1
+  mixing_weight: 0.1
+
+early_stopping:
+  commitment_threshold: 0.05
+  loss_threshold: 0.001
+  reward_threshold: 0.5
+  patience: 5
+  min_delta: 0.0
+  warmup: 20
+
+system:
+  use_cuda: true
+  device_num: 0
+  seed: 42
+
+logging:
+  use_tensorboard: true
+  log_interval: 1
+  save_model: true
+  save_model_interval: 50
+  checkpoint_path: "./models_math"
+  log_path: "./logs_math"
+  experiment_name: "econ_math_adapter"
