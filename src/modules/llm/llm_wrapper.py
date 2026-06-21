@@ -11,7 +11,8 @@ from loguru import logger
 class LLMConfig:
     api_key: str
     model_name: str
-    base_url: str = "https://api.together.xyz/v1"
+    # base_url: str = "https://api.together.xyz/v1"
+    base_url: str = "http://localhost:8000/v1"
     timeout: int = 60
     max_retries: int = 3
     debug: bool = False
@@ -30,7 +31,8 @@ class ImprovedLLMWrapper:
                  api_key: str,
                  model_name: str,
                  belief_dim: Optional[int] = None,
-                 base_url: str = "https://api.together.xyz/v1",
+                #  base_url: str = "https://api.together.xyz/v1",
+                 base_url: str = "http://localhost:8000/v1",
                  timeout: Optional[int] = None,
                  max_retries: int = 3,
                  debug: bool = False,

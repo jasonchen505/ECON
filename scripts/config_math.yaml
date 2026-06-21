@@ -14,13 +14,16 @@ batch_size_run: 1
 
 llm_model_name: "gpt2"
 together_api_key: "${TOGETHER_API_KEY}"
-coordinator_model: "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo"
-executor_model: "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo"
+# coordinator_model: "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo"
+# executor_model: "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo"
+coordinator_model: "qwen3-0.6b"
+executor_model: "qwen3-0.6b"
 commitment_embedding_model_name: "BAAI/bge-large-en-v1.5"
 
 env: "huggingface_dataset_env"
 env_args:
-  hf_dataset_path: "DigitalLearningGmbH/MATH-lighteval"
+  # hf_dataset_path: "DigitalLearningGmbH/MATH-lighteval"
+  hf_dataset_path: "/home/chenyizhou/datasets/toy_math"
   hf_dataset_config_name: null
   dataset_split: "train"
   question_field_name: null
